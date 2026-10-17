@@ -1,0 +1,24 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.env
+
+# Docs, design files and data kept out of the repo
+CLAUDE.md
+PRD.md
+README.md
+web/README.md
+*.xlsx
+*.png
+*.pdf
+.env.*
+
+# Supabase CLI cache (project ref, pooler URL)
+supabase/.temp/
