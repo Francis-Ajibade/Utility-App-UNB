@@ -1,26 +1,22 @@
 import { ArrowRight, Bell, CalendarDays, MessageSquare, PackageCheck, ScanBarcode } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 
-import { LogoMark } from '@/components/auth-card'
+import { LogoMark, WorkingMark } from '@/components/auth-card'
+import { GlowButton } from '@/components/glow-button'
 import { cn } from '@/lib/utils'
 
 // Shown while the app checks the session and loads the account.
 export function Splash() {
   return (
-    <main className="grid min-h-svh place-items-center bg-background">
-      <div className="flex flex-col items-center gap-5">
-        <LogoMark className="size-14 rounded-2xl text-lg animate-in fade-in zoom-in-75 duration-500" />
-        <div className="h-1 w-28 overflow-hidden rounded-full bg-secondary">
-          <div className="h-full w-2/5 rounded-full bg-primary animate-[loading-bar_1.1s_ease-in-out_infinite]" />
-        </div>
-      </div>
+    <main className="grid min-h-svh place-items-center">
+      <WorkingMark className="animate-in fade-in zoom-in-75 duration-500" />
     </main>
   )
 }
 
 type Slide = { title: string; text: string; icon: ReactNode; preview: ReactNode }
 
-// The previews sit on white over the red panel in both themes, so they use fixed colours.
+// The previews sit on cream over the red panel in both themes, so they use fixed colours.
 const SLIDES: Slide[] = [
   {
     title: 'Scan it, and it is logged',
@@ -45,8 +41,8 @@ const SLIDES: Slide[] = [
     icon: <MessageSquare />,
     preview: (
       <div className="flex flex-col gap-2 text-sm text-neutral-900">
-        <p className="self-end rounded-xl rounded-br-sm bg-neutral-100 px-3.5 py-2">What is low in 310?</p>
-        <p className="self-start rounded-xl rounded-bl-sm border border-neutral-200 px-3.5 py-2">
+        <p className="self-end rounded-xl rounded-br-sm bg-[#F4EADD] px-3.5 py-2">What is low in 310?</p>
+        <p className="self-start rounded-xl rounded-bl-sm border border-[#EADFCD] px-3.5 py-2">
           Gauze rolls: 6 left. Want me to flag a reorder?
         </p>
       </div>
@@ -113,22 +109,21 @@ export function Welcome({ onStart }: { onStart: () => void }) {
   const slide = SLIDES[index]
 
   return (
-    <main className="grid min-h-svh bg-background lg:grid-cols-[1fr_1.1fr]">
+    <main className="grid min-h-svh lg:grid-cols-[1fr_1.1fr]">
       <section className="order-2 flex flex-col items-center justify-center px-6 py-12 text-center lg:order-1">
         <div className="w-full max-w-sm animate-in fade-in slide-in-from-bottom-3 duration-700">
           <LogoMark className="mx-auto size-12 rounded-xl text-base" />
-          <h1 className="mt-6 text-3xl font-semibold tracking-tight">Welcome to Lab Inventory</h1>
+          <h1 className="mt-6 text-4xl font-semibold tracking-tight">
+            Welcome to <span className="text-primary">Lab Inventory</span>
+          </h1>
           <p className="mt-2 text-muted-foreground">
             Shared stock for the UNB Bachelor of Health labs, on web and mobile.
           </p>
-          <button
-            onClick={onStart}
-            className="group mt-8 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary font-medium text-primary-foreground transition hover:bg-[#B81F28] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none active:scale-[0.99]"
-          >
+          <GlowButton onClick={onStart} className="mt-8">
             Continue
             <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
-          </button>
-          <p className="mt-6 inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground">
+          </GlowButton>
+          <p className="glass mt-6 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs text-muted-foreground">
             <CalendarDays className="size-3.5 text-violet" />
             Lab scheduler coming soon
           </p>
@@ -136,23 +131,25 @@ export function Welcome({ onStart }: { onStart: () => void }) {
       </section>
 
       <section className="order-1 p-3 lg:order-2">
-        <div className="relative flex h-full min-h-[440px] flex-col items-center justify-center overflow-hidden rounded-[28px] bg-primary px-6 py-10 text-center text-white">
+        <div className="relative flex h-full min-h-[440px] flex-col items-center justify-center overflow-hidden red-mesh rounded-[32px] px-6 py-10 text-center text-[#FFFAF3] shadow-[0_40px_80px_-30px_rgba(140,20,20,0.6)]">
           {/* Two faint rings for depth, nothing busier */}
-          <div className="pointer-events-none absolute -top-40 -right-40 size-[480px] rounded-full border border-white/10" />
-          <div className="pointer-events-none absolute -bottom-52 -left-52 size-[560px] rounded-full border border-white/10" />
+          <div className="pointer-events-none absolute -top-40 -right-40 size-[480px] rounded-full border border-[#FFF6E8]/15" />
+          <div className="pointer-events-none absolute -bottom-52 -left-52 size-[560px] rounded-full border border-[#FFF6E8]/15" />
 
           <div
             key={slide.title}
             className="relative flex w-full max-w-md flex-col items-center animate-in fade-in slide-in-from-right-8 duration-500"
           >
-            <span className="grid size-20 place-items-center rounded-full bg-white/15 ring-8 ring-white/5 [&_svg]:size-9">
+            <span className="glass-on-red grid size-20 place-items-center rounded-full ring-8 ring-[#FFF6E8]/5 [&_svg]:size-9">
               {slide.icon}
             </span>
-            <div className="mt-8 w-full rounded-2xl bg-white p-4 shadow-2xl shadow-black/20 animate-[float_5s_ease-in-out_infinite]">
+            <div className="glass-on-red mt-8 w-full rounded-3xl p-2 shadow-2xl shadow-[#5A0A0A]/30 animate-[float_5s_ease-in-out_infinite]">
+              <div className="rounded-[18px] bg-[#FFFAF3] p-4">
               {slide.preview}
+              </div>
             </div>
             <h2 className="mt-10 text-2xl font-semibold tracking-tight">{slide.title}</h2>
-            <p className="mt-2 max-w-sm text-white/80">{slide.text}</p>
+            <p className="mt-2 max-w-sm text-[#FFF3E6]">{slide.text}</p>
           </div>
 
           <div className="relative mt-8 flex gap-2">
@@ -163,7 +160,7 @@ export function Welcome({ onStart }: { onStart: () => void }) {
                 onClick={() => setIndex(i)}
                 className={cn(
                   'h-1.5 rounded-full transition-all duration-300',
-                  i === index ? 'w-6 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/70',
+                  i === index ? 'w-6 bg-[#FFFAF3]' : 'w-1.5 bg-[#FFF6E8]/40 hover:bg-[#FFF6E8]/70',
                 )}
               />
             ))}

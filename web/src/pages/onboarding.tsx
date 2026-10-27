@@ -2,7 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
 
 import { AuthCard } from '@/components/auth-card'
-import { Button } from '@/components/ui/button'
+import { ErrorNotice } from '@/components/form-message'
+import { GlowButton } from '@/components/glow-button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { updateMe, type Me } from '@/lib/api'
@@ -37,11 +38,11 @@ export function NameStep({ me }: { me: Me }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          {save.error && <p className="text-sm text-destructive">{save.error.message}</p>}
+          {save.error && <ErrorNotice title="Couldn't save your name">{save.error.message}</ErrorNotice>}
         </div>
-        <Button type="submit" disabled={!name.trim() || save.isPending}>
-          Continue
-        </Button>
+        <GlowButton type="submit" disabled={!name.trim()} loading={save.isPending}>
+          {save.isPending ? 'Saving...' : 'Continue'}
+        </GlowButton>
       </form>
     </AuthCard>
   )

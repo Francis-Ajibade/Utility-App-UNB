@@ -2,6 +2,8 @@ import { Clock, Mail } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 
 import { AuthCard, CardIcon } from '@/components/auth-card'
+import { ErrorNotice } from '@/components/form-message'
+import { GlowButton } from '@/components/glow-button'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,7 +21,9 @@ export function SignIn() {
     if (linkError && email) return 'expired'
     return email ? 'form' : 'welcome'
   })
-  const [error, setError] = useState('')
+  // A wrong email is the person's to fix (shown on the field); a failed send is not
+  const [fieldError, setFieldError] = useState('')
+  const [sendFailed, setSendFailed] = useState(false)
   const [sending, setSending] = useState(false)
   const [wait, setWait] = useState(0)
 
@@ -33,12 +37,13 @@ export function SignIn() {
     event?.preventDefault()
     const value = email.trim().toLowerCase()
     if (!UNB_EMAIL.test(value)) {
-      setError("Use your @unb.ca email. Other addresses can't sign in.")
+      setFieldError(value ? "That isn't a UNB address" : 'Enter your UNB email')
       return
     }
 
     setSending(true)
-    setError('')
+    setFieldError('')
+    setSendFailed(false)
     const { error } = await supabase.auth.signInWithOtp({
       email: value,
       options: { emailRedirectTo: window.location.origin },
@@ -46,7 +51,7 @@ export function SignIn() {
     setSending(false)
 
     if (error) {
-      setError("Couldn't send the link. Try again in a minute.")
+      setSendFailed(true)
       return
     }
     localStorage.setItem(LAST_EMAIL, value)
@@ -74,10 +79,21 @@ export function SignIn() {
         }
       >
         <div className="flex flex-col gap-2">
+          {sendFailed && (
+            <ErrorNotice title="Couldn't send the link">
+              Check your connection, then try again in a minute.
+            </ErrorNotice>
+          )}
           <Button variant="outline" disabled={wait > 0 || sending} onClick={() => sendLink()}>
             {wait > 0 ? `Resend in 0:${String(wait).padStart(2, '0')}` : 'Resend link'}
           </Button>
-          <Button variant="ghost" onClick={() => setStep('form')}>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setSendFailed(false)
+              setStep('form')
+            }}
+          >
             Use a different email
           </Button>
         </div>
@@ -96,11 +112,22 @@ export function SignIn() {
         title="This link has expired"
         subtitle={`Sign-in links work once and last 1 hour. We can send a new one to ${email}.`}
       >
-        <div className="flex flex-col gap-2">
-          <Button disabled={sending} onClick={() => sendLink()}>
-            Send a new link
-          </Button>
-          <Button variant="ghost" onClick={() => setStep('form')}>
+        <div className="flex flex-col gap-3">
+          {sendFailed && (
+            <ErrorNotice title="Couldn't send the link">
+              Check your connection, then try again in a minute.
+            </ErrorNotice>
+          )}
+          <GlowButton loading={sending} onClick={() => sendLink()}>
+            {sending ? 'Sending...' : 'Send a new link'}
+          </GlowButton>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setSendFailed(false)
+              setStep('form')
+            }}
+          >
             Use a different email
           </Button>
         </div>
@@ -123,17 +150,28 @@ export function SignIn() {
             autoFocus
             placeholder="name@unb.ca"
             value={email}
-            aria-invalid={!!error}
+            aria-invalid={!!fieldError}
+            aria-describedby={fieldError ? 'email-error' : undefined}
             onChange={(e) => {
               setEmail(e.target.value)
-              setError('')
+              setFieldError('')
+              setSendFailed(false)
             }}
           />
-          {error && <p className="text-sm text-destructive">{error}</p>}
         </div>
-        <Button type="submit" disabled={sending}>
+        {fieldError && (
+          <ErrorNotice id="email-error" title={fieldError}>
+            Only @unb.ca addresses can sign in.
+          </ErrorNotice>
+        )}
+        {sendFailed && (
+          <ErrorNotice title="Couldn't send the link">
+            Check your connection, then try again in a minute.
+          </ErrorNotice>
+        )}
+        <GlowButton type="submit" loading={sending} className="mt-1">
           {sending ? 'Sending...' : 'Send sign-in link'}
-        </Button>
+        </GlowButton>
       </form>
     </AuthCard>
   )

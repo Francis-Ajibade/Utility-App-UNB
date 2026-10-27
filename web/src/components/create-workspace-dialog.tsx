@@ -2,7 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Check, Copy, FlaskConical, PartyPopper } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 
-import { CardIcon, LogoMark } from '@/components/auth-card'
+import { CardIcon, WorkingMark } from '@/components/auth-card'
+import { ErrorNotice } from '@/components/form-message'
 import { inviteUrl, markInvitePending, markInviteShared } from '@/components/invite'
 import { Button } from '@/components/ui/button'
 import {
@@ -88,7 +89,9 @@ export function CreateWorkspaceDialog({ me, open, onOpenChange, onCreated }: Pro
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-              {create.error && <p className="text-sm text-destructive">{create.error.message}</p>}
+              {create.error && (
+                <ErrorNotice title="Couldn't create the workspace">{create.error.message}</ErrorNotice>
+              )}
             </div>
             <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
               <Button type="button" variant="ghost" onClick={() => close(false)}>
@@ -108,7 +111,7 @@ export function CreateWorkspaceDialog({ me, open, onOpenChange, onCreated }: Pro
 function SettingUp({ name }: { name: string }) {
   return (
     <div className="flex flex-col items-center py-10 text-center animate-in fade-in zoom-in-95 duration-300">
-      <LogoMark className="size-12 rounded-xl animate-pulse" />
+      <WorkingMark />
       <DialogTitle className="mt-5 text-lg font-semibold">Setting up {name}...</DialogTitle>
       <DialogDescription className="mt-1">Making you its admin.</DialogDescription>
     </div>
@@ -164,9 +167,9 @@ function InviteStep({ team, onDone }: { team: TeamSummary; onDone: () => void })
           </Button>
         </div>
         {invite.error ? (
-          <p className="text-sm text-destructive">
-            Couldn't make the link. You can copy one from the workspace card.
-          </p>
+          <ErrorNotice title="Couldn't make the link">
+            You can copy one from the workspace card.
+          </ErrorNotice>
         ) : (
           expires && <p className="text-xs text-muted-foreground">Works until {expires}.</p>
         )}

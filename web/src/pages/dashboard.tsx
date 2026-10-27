@@ -26,11 +26,11 @@ export function Dashboard() {
         ·<span>{today}</span>
       </p>
       <h1 className="mt-1 text-3xl font-semibold tracking-tight">
-        {greeting(now.getHours())}, {firstName}
+        {greeting(now.getHours())}, <span className="text-primary">{firstName}</span>
       </h1>
 
-      <section className="mt-8 flex flex-col items-center rounded-2xl border bg-card px-6 py-16 text-center">
-        <CardIcon className="size-14 [&_svg]:size-6">
+      <section className="glass mt-8 flex flex-col items-center rounded-3xl px-6 py-16 text-center">
+        <CardIcon tone="green" className="size-16 rounded-2xl [&_svg]:size-7">
           <FileSpreadsheet />
         </CardIcon>
         <h2 className="mt-4 text-xl font-semibold">Import your current spreadsheet</h2>

@@ -11,13 +11,14 @@ import {
   Plus,
   Users,
 } from 'lucide-react'
-import { useState, type ReactNode } from 'react'
+import { useState, type ComponentProps, type ReactNode } from 'react'
 import { Link } from 'react-router'
 
 import { AccountMenu } from '@/components/account-menu'
 import { LAST_TEAM } from '@/components/app-shell'
 import { CardIcon, Logo, LogoMark } from '@/components/auth-card'
 import { CreateWorkspaceDialog } from '@/components/create-workspace-dialog'
+import { GlowButton } from '@/components/glow-button'
 import { CopyInviteButton, needsInvite } from '@/components/invite'
 import { Button } from '@/components/ui/button'
 import {
@@ -63,9 +64,9 @@ export function Home({ me }: { me: Me }) {
   }
 
   return (
-    <div className="min-h-svh bg-background">
-      <header className="sticky top-0 z-10 border-b bg-background/90 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-4 sm:px-6">
+    <div className="min-h-svh">
+      <header className="sticky top-3 z-10 px-4 pt-3 sm:px-6">
+        <div className="glass mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 rounded-full pr-3 pl-4">
           {team ? (
             <div className="flex min-w-0 items-center gap-3">
               <LogoMark />
@@ -82,7 +83,7 @@ export function Home({ me }: { me: Me }) {
         <section className="animate-in fade-in slide-in-from-bottom-2 duration-500">
           <p className="text-sm text-muted-foreground">{today}</p>
           <h1 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">
-            {greeting(new Date().getHours())}, {firstName}
+            {greeting(new Date().getHours())}, <span className="text-primary">{firstName}</span>
           </h1>
         </section>
 
@@ -112,13 +113,13 @@ export function Home({ me }: { me: Me }) {
               </Tile>
 
               <Tile index={3}>
-                <TileHead icon={<Users />} tone="green" title="Team" />
+                <TileHead icon={<Users />} tone="coral" title="Team" />
                 <div className="mt-6 flex items-center gap-3">
                   <div className="flex -space-x-2">
-                    <span className="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-xs font-semibold">
+                    <span className="grid size-9 place-items-center rounded-full border-2 border-white bg-linear-to-br from-[#FFE1D2] to-[#F7C3B0] text-xs font-semibold text-[#7A2A1A]">
                       {initials(me.display_name, me.email)}
                     </span>
-                    <span className="grid size-9 place-items-center rounded-full border-2 border-dashed border-border bg-card text-muted-foreground">
+                    <span className="grid size-9 place-items-center rounded-full border-2 border-dashed border-[#E3C9BC] bg-white/60 text-muted-foreground">
                       <Plus className="size-4" />
                     </span>
                   </div>
@@ -151,11 +152,15 @@ export function Home({ me }: { me: Me }) {
 
             <section
               style={{ animationDelay: '300ms' }}
-              className="rounded-2xl border bg-card p-5 animate-in fade-in slide-in-from-bottom-3 duration-500 [animation-fill-mode:both] sm:p-6"
+              className="glass rounded-3xl p-5 animate-in fade-in slide-in-from-bottom-3 duration-500 [animation-fill-mode:both] sm:p-6"
             >
-              <h2 className="font-semibold">Recent activity</h2>
-              <div className="mt-4 flex items-center gap-3 rounded-xl bg-secondary/60 px-4 py-5">
-                <Activity className="size-5 shrink-0 text-muted-foreground" />
+              <div className="flex items-center gap-3">
+                <CardIcon tone="amber" className="size-10 rounded-xl">
+                  <Activity />
+                </CardIcon>
+                <h2 className="font-semibold">Recent activity</h2>
+              </div>
+              <div className="mt-4 flex items-center gap-3 rounded-2xl bg-white/50 px-4 py-5 ring-1 ring-white/80 dark:bg-white/5 dark:ring-white/5">
                 <p className="text-sm text-muted-foreground">
                   Nothing yet. Stock changes, tasks and requests show up here as they happen.
                 </p>
@@ -195,7 +200,7 @@ function WorkspaceSwitcher({
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex min-w-0 items-center gap-1.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-secondary data-popup-open:bg-secondary">
+      <DropdownMenuTrigger className="flex min-w-0 items-center gap-1.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-white/60 data-popup-open:bg-white/60 dark:hover:bg-white/5 dark:data-popup-open:bg-white/5">
         <span className="truncate font-semibold">{current.name}</span>
         <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" />
       </DropdownMenuTrigger>
@@ -204,7 +209,7 @@ function WorkspaceSwitcher({
           <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
           {teams.map((t) => (
             <DropdownMenuItem key={t.id} onClick={() => onSelect(t.id)} className="gap-3 py-2">
-              <span className="grid size-7 shrink-0 place-items-center rounded-md bg-primary/10 text-[11px] font-semibold text-destructive">
+              <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-linear-to-br from-[#FF6A5C] to-[#C8161E] text-[11px] font-semibold text-white">
                 {initials(t.name, t.name)}
               </span>
               <span className="min-w-0 flex-1">
@@ -228,7 +233,7 @@ function WorkspaceSwitcher({
 }
 
 const tileClass =
-  'group flex flex-col rounded-2xl border bg-card p-5 text-left animate-in fade-in slide-in-from-bottom-3 duration-500 [animation-fill-mode:both] sm:p-6'
+  'glass group flex flex-col rounded-3xl p-5 text-left animate-in fade-in slide-in-from-bottom-3 duration-500 [animation-fill-mode:both] sm:p-6'
 
 // A home widget. With `to` the whole tile is a link and lifts on hover.
 function Tile({ index, to, children }: { index: number; to?: string; children: ReactNode }) {
@@ -240,7 +245,7 @@ function Tile({ index, to, children }: { index: number; to?: string; children: R
         style={style}
         className={cn(
           tileClass,
-          'transition-all hover:-translate-y-0.5 hover:border-foreground/15 hover:shadow-lg hover:shadow-black/5 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none',
+          'transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_28px_50px_-22px_rgba(140,34,20,0.4)] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none',
         )}
       >
         {children}
@@ -262,7 +267,7 @@ function TileHead({
   badge,
 }: {
   icon: ReactNode
-  tone: 'red' | 'violet' | 'green' | 'blue'
+  tone: ComponentProps<typeof CardIcon>['tone']
   title: string
   action?: string
   badge?: string
@@ -276,13 +281,13 @@ function TileHead({
         <span className="font-semibold">{title}</span>
       </div>
       {action && (
-        <span className="flex items-center gap-1 text-sm font-medium text-destructive">
+        <span className="flex items-center gap-1 text-sm font-medium text-primary">
           {action}
           <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
         </span>
       )}
       {badge && (
-        <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs text-muted-foreground">{badge}</span>
+        <span className="rounded-full bg-white/70 px-2.5 py-0.5 text-xs text-muted-foreground ring-1 ring-white dark:bg-white/5 dark:ring-white/10">{badge}</span>
       )}
     </div>
   )
@@ -300,7 +305,7 @@ function SetupCard({ team, onCopied }: { team: TeamSummary; onCopied: () => void
   const doneCount = steps.filter((s) => s.done).length
 
   return (
-    <section className="rounded-2xl border bg-card p-5 animate-in fade-in slide-in-from-bottom-3 duration-500 sm:p-6">
+    <section className="glass rounded-3xl p-5 animate-in fade-in slide-in-from-bottom-3 duration-500 sm:p-6">
       <div className="flex items-center gap-4">
         <ProgressRing done={doneCount} total={steps.length} />
         <div className="min-w-0 flex-1">
@@ -316,14 +321,18 @@ function SetupCard({ team, onCopied }: { team: TeamSummary; onCopied: () => void
           <li
             key={step.label}
             className={cn(
-              'flex items-center gap-3 rounded-xl border px-3.5 py-3 text-sm',
-              step.done ? 'border-transparent bg-secondary/60 text-muted-foreground' : 'bg-card',
+              'flex items-center gap-3 rounded-2xl px-3.5 py-3 text-sm ring-1',
+              step.done
+                ? 'bg-white/35 text-muted-foreground ring-white/50 dark:bg-white/5 dark:ring-white/5'
+                : 'bg-white/70 ring-white dark:bg-white/10 dark:ring-white/10',
             )}
           >
             <span
               className={cn(
                 'grid size-6 shrink-0 place-items-center rounded-full text-xs font-semibold',
-                step.done ? 'bg-ok/15 text-ok' : 'border text-muted-foreground',
+                step.done
+                  ? 'bg-linear-to-br from-[#6FD3B4] to-[#1F8A70] text-white shadow-sm'
+                  : 'border border-[#E3C9BC] text-muted-foreground',
               )}
             >
               {step.done ? <Check className="size-3.5" /> : i + 1}
@@ -356,7 +365,7 @@ function ProgressRing({ done, total }: { done: number; total: number }) {
   return (
     <div className="relative grid size-12 shrink-0 place-items-center">
       <svg viewBox="0 0 48 48" className="absolute inset-0 -rotate-90">
-        <circle cx="24" cy="24" r={r} fill="none" strokeWidth="4" className="stroke-secondary" />
+        <circle cx="24" cy="24" r={r} fill="none" strokeWidth="4" className="stroke-white/80 dark:stroke-white/10" />
         <circle
           cx="24"
           cy="24"
@@ -380,7 +389,7 @@ const STEPS = ['Name your workspace', 'Invite your team', 'Import your spreadshe
 
 function EmptyState({ onCreate }: { onCreate: () => void }) {
   return (
-    <section className="mt-8 overflow-hidden rounded-2xl border bg-card animate-in fade-in slide-in-from-bottom-3 duration-500 [animation-delay:100ms] [animation-fill-mode:both]">
+    <section className="glass mt-8 overflow-hidden rounded-3xl animate-in fade-in slide-in-from-bottom-3 duration-500 [animation-delay:100ms] [animation-fill-mode:both]">
       <div className="grid gap-8 p-6 sm:p-10 md:grid-cols-[1fr_auto] md:items-center">
         <div>
           <h2 className="text-2xl font-semibold tracking-tight">Create your first workspace</h2>
@@ -394,7 +403,9 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
                 <span
                   className={cn(
                     'grid size-6 place-items-center rounded-full font-mono text-xs',
-                    i === 0 ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground',
+                    i === 0
+                      ? 'bg-linear-to-br from-[#FF6A5C] to-[#C8161E] text-white shadow-sm'
+                      : 'bg-white/70 text-muted-foreground ring-1 ring-white dark:bg-white/10 dark:ring-white/10',
                   )}
                 >
                   {i + 1}
@@ -403,10 +414,10 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
               </li>
             ))}
           </ol>
-          <Button className="mt-8" onClick={onCreate}>
-            <Plus />
+          <GlowButton onClick={onCreate} className="mt-8 w-fit">
+            <Plus className="size-4" />
             Create workspace
-          </Button>
+          </GlowButton>
         </div>
         <AppsPreview />
       </div>
@@ -418,13 +429,13 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
 function AppsPreview() {
   return (
     <div className="relative mx-auto hidden h-44 w-56 md:block" aria-hidden>
-      <div className="absolute top-2 left-0 flex w-40 -rotate-6 items-center gap-3 rounded-xl border bg-card p-3 shadow-lg transition-transform duration-500 hover:rotate-0">
+      <div className="absolute top-2 left-0 flex w-40 -rotate-6 items-center gap-3 rounded-2xl glass p-3 transition-transform duration-500 hover:rotate-0">
         <CardIcon className="size-9 rounded-lg">
           <Boxes />
         </CardIcon>
         <span className="text-sm font-medium">Inventory</span>
       </div>
-      <div className="absolute right-0 bottom-2 flex w-40 rotate-6 items-center gap-3 rounded-xl border bg-card p-3 shadow-lg transition-transform duration-500 hover:rotate-0">
+      <div className="absolute right-0 bottom-2 flex w-40 rotate-6 items-center gap-3 rounded-2xl glass p-3 transition-transform duration-500 hover:rotate-0">
         <CardIcon tone="violet" className="size-9 rounded-lg">
           <CalendarDays />
         </CardIcon>

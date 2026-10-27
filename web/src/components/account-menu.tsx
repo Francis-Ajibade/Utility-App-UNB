@@ -37,7 +37,7 @@ export function AccountMenu({ me, side = 'bottom', showHome = false }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label="Account"
-        className="grid size-10 place-items-center rounded-full border bg-card text-sm font-semibold transition hover:border-foreground/30 data-popup-open:border-foreground/30"
+        className="grid size-10 place-items-center rounded-full bg-linear-to-br from-[#FFE1D2] to-[#F7C3B0] text-sm font-semibold text-[#7A2A1A] shadow-[0_6px_14px_-6px_rgba(140,34,20,0.45)] ring-2 ring-white transition hover:brightness-105 data-popup-open:ring-primary/40 dark:ring-white/10"
       >
         {initials(me.display_name, me.email)}
       </DropdownMenuTrigger>

@@ -52,46 +52,61 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Light by default; .dark on <html> switches (lib/theme.ts). Solid surfaces,
-   UNB red for primary actions, status colours for the small pops. */
+/* Light by default; .dark on <html> switches (lib/theme.ts). Cream base with a
+   soft red, peach and gold mesh behind it, frosted glass cards, UNB red for
+   primary actions, and a warm accent family (coral, saffron, rose, plum, teal)
+   for icons. */
 :root {
     color-scheme: light;
-    --background: #F6F6F4;
-    --foreground: #141414;
-    --card: #FFFFFF;
-    --card-foreground: #141414;
-    --popover: #FFFFFF;
-    --popover-foreground: #141414;
-    --primary: #D22630;
-    --primary-foreground: #FFFFFF;
-    --secondary: #EFEFEC;
-    --secondary-foreground: #141414;
-    --muted: #EFEFEC;
-    --muted-foreground: #6B6B68;
-    --accent: #EFEFEC;
-    --accent-foreground: #141414;
-    --destructive: #D22630;
-    --border: #E4E4E0;
-    --input: #E4E4E0;
-    --ring: #D22630;
+    --background: #FBF6EE;
+    --foreground: #2A1613;
+    --card: rgba(255, 252, 247, 0.62);
+    --card-foreground: #2A1613;
+    --popover: #FFFCF7;
+    --popover-foreground: #2A1613;
+    --primary: #D42027;
+    --primary-foreground: #FFFAF3;
+    --secondary: #F4EADD;
+    --secondary-foreground: #2A1613;
+    --muted: #F4EADD;
+    --muted-foreground: #7A5A50;
+    --accent: #F4EADD;
+    --accent-foreground: #2A1613;
+    --destructive: #C41C23;
+    --border: rgba(122, 64, 44, 0.14);
+    --input: rgba(122, 64, 44, 0.18);
+    --ring: #D42027;
     --ok: #1A7F37;
     --refill: #0969DA;
     --reorder: #9A6700;
-    --violet: #6D4AE0;
+    --violet: #7B3F98;
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
-    --sidebar: #FFFFFF;
-    --sidebar-foreground: #141414;
-    --sidebar-primary: #D22630;
-    --sidebar-primary-foreground: #FFFFFF;
-    --sidebar-accent: #EFEFEC;
-    --sidebar-accent-foreground: #141414;
-    --sidebar-border: #E4E4E0;
-    --sidebar-ring: #D22630;
+    --radius: 0.875rem;
+    --sidebar: #FFFCF7;
+    --sidebar-foreground: #2A1613;
+    --sidebar-primary: #D42027;
+    --sidebar-primary-foreground: #FFFAF3;
+    --sidebar-accent: #F4EADD;
+    --sidebar-accent-foreground: #2A1613;
+    --sidebar-border: rgba(122, 64, 44, 0.14);
+    --sidebar-ring: #D42027;
+
+    /* Glass surfaces: a light frosted fill, a bright hairline edge, a warm shadow */
+    --glass-fill: linear-gradient(140deg, rgba(255, 255, 255, 0.78), rgba(255, 249, 240, 0.5));
+    --glass-edge: rgba(255, 255, 255, 0.85);
+    --glass-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 18px 40px -20px rgba(140, 34, 20, 0.28);
+
+    /* The page backdrop: soft colour pools on cream, fixed behind everything */
+    --mesh:
+        radial-gradient(42rem 32rem at 8% -6%, rgba(212, 32, 39, 0.20), transparent 70%),
+        radial-gradient(36rem 28rem at 96% 4%, rgba(255, 150, 104, 0.28), transparent 70%),
+        radial-gradient(40rem 30rem at 82% 100%, rgba(244, 184, 84, 0.22), transparent 70%),
+        radial-gradient(34rem 26rem at 4% 96%, rgba(226, 92, 128, 0.14), transparent 70%),
+        #FBF6EE;
 }
 
 /* Charcoal and UNB red (CLAUDE.md > UI) */
@@ -121,6 +136,14 @@
     --sidebar-accent: #232323;
     --sidebar-accent-foreground: #EDEDED;
     --sidebar-border: #2E2E2E;
+    --glass-fill: linear-gradient(140deg, rgba(40, 32, 31, 0.72), rgba(26, 22, 22, 0.55));
+    --glass-edge: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 18px 40px -20px rgba(0, 0, 0, 0.6);
+    --mesh:
+        radial-gradient(42rem 32rem at 8% -6%, rgba(212, 32, 39, 0.22), transparent 70%),
+        radial-gradient(36rem 28rem at 96% 4%, rgba(255, 120, 80, 0.10), transparent 70%),
+        radial-gradient(40rem 30rem at 82% 100%, rgba(244, 184, 84, 0.06), transparent 70%),
+        #121212;
 }
 
 @layer base {
@@ -128,16 +151,88 @@
     @apply border-border outline-ring/50;
     }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background: var(--mesh);
+    background-attachment: fixed;
     }
   html {
     @apply font-sans;
     }
 }
-/* Indeterminate bar on the launch screen */
-@keyframes loading-bar {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(250%); }
+/* Frosted glass card: every panel, tile and bar sits on this */
+@utility glass {
+  background: var(--glass-fill);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+}
+
+/* Glass on the red hero panel: a cream tint and a brighter edge */
+@utility glass-on-red {
+  background: rgba(255, 246, 232, 0.12);
+  border: 1px solid rgba(255, 246, 232, 0.42);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Red-tinted glass for the hero button: a pale red pane, bright rim, warm depth */
+@utility glass-red {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0.04) 55%, rgb(212 32 39 / 0.10)),
+    rgb(212 32 39 / 0.10);
+  border: 1px solid rgb(255 255 255 / 0.7);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    inset 0 -10px 18px -10px rgb(212 32 39 / 0.35),
+    0 12px 26px -14px rgb(196 28 35 / 0.55);
+  backdrop-filter: blur(14px) saturate(1.7);
+  -webkit-backdrop-filter: blur(14px) saturate(1.7);
+}
+
+.dark .glass-red {
+  border-color: rgb(255 255 255 / 0.12);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    inset 0 -10px 18px -10px rgb(212 32 39 / 0.4),
+    0 12px 26px -14px rgb(0 0 0 / 0.6);
+}
+
+/* While working: a light orbits the hero button's ring */
+@property --orbit {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@utility orbit-ring {
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--orbit),
+    rgb(212 32 39 / 0.12) 0deg 200deg,
+    rgb(212 32 39 / 0.9) 300deg,
+    #FF9A7A 345deg,
+    rgb(212 32 39 / 0.12) 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: orbit 1.1s linear infinite;
+}
+@keyframes orbit {
+  to { --orbit: 360deg; }
+}
+
+/* The light behind the hero button drifts slowly side to side (keeps its -50% vertical centring) */
+@keyframes drift {
+  50% { translate: 35% -50%; }
+}
+
+/* The red hero panel: deep UNB red with a warm glow, like light on lacquer */
+@utility red-mesh {
+  background:
+    radial-gradient(30rem 24rem at 78% 28%, rgba(255, 128, 100, 0.45), transparent 70%),
+    radial-gradient(26rem 22rem at 12% 92%, rgba(120, 6, 18, 0.55), transparent 70%),
+    #D42027;
 }
 
 /* Gentle bob for the welcome screen's feature card */
